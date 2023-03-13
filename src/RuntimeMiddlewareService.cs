@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Extensions.Middlewares.Plugin
 {
-    internal class RuntimeMiddlewareService
+    public class RuntimeMiddlewareService
     {
         private IApplicationBuilder? app_builder_;
         private Func<RequestDelegate, RequestDelegate>? middleware_;
