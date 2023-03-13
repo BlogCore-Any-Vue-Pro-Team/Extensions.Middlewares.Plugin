@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions.Middlewares.Plugin", "src\Extensions.Middlewares.Plugin.csproj", "{DA091278-0AF7-4854-8176-FF36FB352815}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "example\Host\Host.csproj", "{BEE89546-6612-44E4-8AD1-E211DB5C57A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8FAE965D-EFAD-4A40-AA20-F5B7BFC355F2} = {8FAE965D-EFAD-4A40-AA20-F5B7BFC355F2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "example\Plugin\Plugin.csproj", "{8FAE965D-EFAD-4A40-AA20-F5B7BFC355F2}"
 EndProject
