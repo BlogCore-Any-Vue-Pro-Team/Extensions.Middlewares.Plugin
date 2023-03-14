@@ -10,7 +10,13 @@ namespace Extensions.Middlewares.Plugin
 
         internal void Use(IApplicationBuilder app)
         {
-            app_builder_ = app.Use(next => context => middleware_ == null ? next(context) : middleware_(next)(context));
+            app_builder_ = app.Use(
+                (next) => {
+                    return (context) => {
+                        return middleware_ == null ? next(context) : middleware_(next)(context);
+                    };
+                }
+            );
         }
 
         public void Configure(Action<IApplicationBuilder> action)
@@ -20,9 +26,9 @@ namespace Extensions.Middlewares.Plugin
                 throw new InvalidOperationException();
             }
 
-            var app = app_builder_.New();
-            action(app);
-            middleware_ = next => app.Use(_ => next).Build();
+            var new_app_builder = app_builder_.New();
+            action(new_app_builder);
+            middleware_ = next => new_app_builder.Use(_ => next).Build();
         }
     }
 }
