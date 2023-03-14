@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Extensions.Middlewares.Plugin;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 namespace Plugin
 {
-    public class Class
+    public class Class : BasePlugin
     {
-        public void RegisterMiddleware(IApplicationBuilder app)
+        public override void OnPluginStart(IApplicationBuilder app)
         {
             app.Map(
                 "/plugin-page",

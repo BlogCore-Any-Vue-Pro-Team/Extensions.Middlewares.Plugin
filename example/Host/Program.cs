@@ -16,9 +16,12 @@ app.MapGet(
     "/register-plugin",
     () => {
         Assembly plugin_assembly = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugin.dll"));
-        Type plugin_type = plugin_assembly.GetType("Plugin.Class") ?? throw new EntryPointNotFoundException();
-        object plugin_object = Activator.CreateInstance(plugin_type) ?? throw new InvalidOperationException();
-        MethodInfo register_middleware_method = plugin_type.GetMethod("RegisterMiddleware") ?? throw new NotImplementedException();
+        var plugin_types = plugin_assembly.GetExportedTypes().Where(exported_type => exported_type.GetInterfaces().Contains(typeof(IPlugin)));
+        if (!plugin_types.Any())
+        {
+            throw new EntryPointNotFoundException();
+        }
+        var plugin_objects = plugin_types.Select(plugin_type => Activator.CreateInstance(plugin_type) as IPlugin ?? throw new InvalidOperationException());
         app
             .Services
             .GetRequiredService<RuntimeMiddlewareService>()
@@ -27,7 +30,14 @@ app.MapGet(
                     app_builder.Map(
                         $"/{ComputeAssemblyHash(plugin_assembly)}",
                         app_builder => {
-                            register_middleware_method.Invoke(plugin_object, new object[] { app_builder });
+                            var results = plugin_objects.Select(plugin_object => plugin_object.Enable(app_builder));
+                            // IMPORTANT!
+                            // MIDDLEWARES MAY NOT BE ADDED WITHOUT THIS JUDGEMENT!
+                            // I'm curious about the reason.
+                            if (results.Any(result => result == false))
+                            {
+                                throw new InvalidOperationException();
+                            }
                         }
                     );
                 }
