@@ -14,8 +14,8 @@ namespace Extensions.Middlewares.Plugin
 
         public string? ProjectUrl { get; }
 
-        public bool Enable(IApplicationBuilder app);
+        public void Enable(IApplicationBuilder app);
 
-        public bool Disable();
+        public void Disable();
     }
 }

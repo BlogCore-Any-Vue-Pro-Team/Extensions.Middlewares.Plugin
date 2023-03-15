@@ -15,16 +15,14 @@ namespace Extensions.Middlewares.Plugin
 
         public virtual string? ProjectUrl => null;
 
-        public bool Enable(IApplicationBuilder app)
+        public void Enable(IApplicationBuilder app)
         {
             OnPluginStart(app);
-            return true;
         }
 
-        public bool Disable()
+        public void Disable()
         {
             OnPluginStop();
-            return true;
         }
 
         public virtual void OnPluginStart(IApplicationBuilder app)
